@@ -7,7 +7,7 @@ Panduan ini untuk seluruh anggota tim (UI, Frontend, Backend, PO, SM) untuk memu
 - `leksika_app/` : Framework Flutter (Mobile App)
 
 ## 🛠️ Langkah Awal (Backend)
-1. `cd leksika_backend`
+1. `cd backend`
 2. `composer install`
 3. `cp .env.example .env` (Lalu buat database di postgresql dengan nama `leksika`)
 4. `php artisan key:generate`
@@ -15,7 +15,7 @@ Panduan ini untuk seluruh anggota tim (UI, Frontend, Backend, PO, SM) untuk memu
 6. `php artisan serve --host=0.0.0.0`
 
 ## 📱 Langkah Awal (Frontend)
-1. `cd leksika_app`
+1. `cd frontend`
 2. `flutter pub get`
 3. Buka emulator/HP
 4. `flutter run`
