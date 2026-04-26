@@ -3,8 +3,8 @@
 Panduan ini untuk seluruh anggota tim (UI, Frontend, Backend, PO, SM) untuk memulai project secara lokal.
 
 ## 📁 Struktur Folder
-- `leksika_backend/` : Framework Laravel 11 (REST API)
-- `leksika_app/` : Framework Flutter (Mobile App)
+- `backend/` : Framework Laravel 11 (REST API)
+- `frontend/` : Framework Flutter (Mobile App)
 
 ## 🛠️ Langkah Awal (Backend)
 1. `cd backend`
