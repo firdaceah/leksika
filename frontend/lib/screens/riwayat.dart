@@ -11,7 +11,6 @@ class RiwayatState extends State<Riwayat> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      // TOMBOL TAMBAH (FIGMA STYLE)
       floatingActionButton: FloatingActionButton(
         onPressed: () => Navigator.pushNamed(context, '/create-rangkuman'),
         backgroundColor: const Color(0xFF006947),
@@ -30,7 +29,6 @@ class RiwayatState extends State<Riwayat> {
               const SizedBox(height: 20),
               _buildHeaderTitle(),
 
-              // List Riwayat yang bisa diklik ke Detail
               _buildHistoryCard(
                 "Struktur Data & Algoritma",
                 "Mempelajari fundamental linked list dan binary tree transversal secara mendalam.",

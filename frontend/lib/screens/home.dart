@@ -11,7 +11,6 @@ class HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      // TOMBOL TAMBAH DI TENGAH (FIGMA STYLE)
       floatingActionButton: FloatingActionButton(
         onPressed: () => Navigator.pushNamed(context, '/create-rangkuman'),
         backgroundColor: const Color(0xFF006947),
@@ -20,7 +19,6 @@ class HomePageState extends State<HomePage> {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
 
-      // NAVBAR LENGKUNG
       bottomNavigationBar: _buildBottomNavbar(),
 
       body: SafeArea(
@@ -32,7 +30,6 @@ class HomePageState extends State<HomePage> {
               _buildMainBanner(),
               _buildHistoryHeader(),
               
-              // Kartu Riwayat yang bisa diklik ke Detail
               _buildHistoryCard(
                 "Struktur Data & Algoritma",
                 "Mempelajari fundamental linked list dan binary tree transversal secara mendalam.",
@@ -47,7 +44,7 @@ class HomePageState extends State<HomePage> {
               ),
 
               _buildDailyTarget(),
-              const SizedBox(height: 100), // Spasi agar konten tidak tertutup Navbar
+              const SizedBox(height: 100), 
             ],
           ),
         ),
@@ -55,7 +52,6 @@ class HomePageState extends State<HomePage> {
     );
   }
 
-  // --- WIDGET KOMPONEN ---
 
   Widget _buildGreetingSection() {
     return Padding(
