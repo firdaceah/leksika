@@ -10,6 +10,7 @@ class CREATERANGKUMAN extends StatefulWidget {
 class CREATERANGKUMANState extends State<CREATERANGKUMAN> {
   String _selectedPanjang = "Sedang (5-7 Paragraf)";
   String _selectedSoal = "10 Soal";
+  bool _buatFlashcard = true;
 
   final List<String> _panjangOptions = [
     "Singkat (3-4 Paragraf)",
@@ -26,153 +27,304 @@ class CREATERANGKUMANState extends State<CREATERANGKUMAN> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // --- HEADER HIJAU ---
-              Container(
-                width: double.infinity,
-                decoration: const BoxDecoration(
-                  color: Color(0xFF006947),
-                  borderRadius: BorderRadius.only(
-                    bottomRight: Radius.circular(48),
-                    bottomLeft: Radius.circular(48),
-                  ),
-                ),
-                padding: const EdgeInsets.fromLTRB(24, 40, 24, 40),
+      backgroundColor: const Color(0xFFEAFAF3),
+      body: Column(
+        children: [
+          // --- HEADER ---
+          Container(
+            width: double.infinity,
+            decoration: const BoxDecoration(
+              color: Color(0xFF006947),
+              borderRadius: BorderRadius.only(
+                bottomLeft: Radius.circular(24),
+                bottomRight: Radius.circular(24),
+              ),
+            ),
+            child: SafeArea(
+              bottom: false,
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(4, 8, 16, 16),
                 child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     IconButton(
-                      icon: const Icon(Icons.arrow_back_ios, color: Colors.white, size: 20),
+                      icon: const Icon(Icons.arrow_back_ios,
+                          color: Colors.white, size: 20),
                       onPressed: () => Navigator.pop(context),
                     ),
                     const Text(
-                      "Buat Ringkasan",
+                      "Buat Rangkuman",
                       style: TextStyle(
                         color: Colors.white,
-                        fontSize: 20,
+                        fontSize: 18,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                  ],
-                ),
-              ),
-
-              const SizedBox(height: 30),
-
-              // --- AREA UPLOAD (DASHED BORDER) ---
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 24),
-                child: Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.all(40),
-                  decoration: BoxDecoration(
-                    border: DashedBorder.fromBorderSide(
-                      dashLength: 15,
-                      side: const BorderSide(color: Color(0x4D81B8A5), width: 2),
-                    ),
-                    borderRadius: BorderRadius.circular(48),
-                    color: const Color(0x99FFFFFF),
-                  ),
-                  child: Column(
-                    children: [
-                      CircleAvatar(
-                        radius: 40,
-                        backgroundColor: const Color(0xFF69F6B8),
-                        child: const Icon(Icons.file_upload_outlined, size: 40, color: Color(0xFF006947)),
+                    Container(
+                      width: 38,
+                      height: 38,
+                      decoration: const BoxDecoration(
+                        color: Colors.white,
+                        shape: BoxShape.circle,
                       ),
-                      const SizedBox(height: 20),
-                      const Text(
-                        "Tap untuk Upload File",
-                        style: TextStyle(
-                          color: Color(0xFF00362A),
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const Text(
-                        "Dukung PDF, DOCX, atau Gambar",
-                        style: TextStyle(color: Color(0xFF2F6555), fontSize: 14),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-
-              const SizedBox(height: 30),
-
-              // --- PILIHAN PANJANG RINGKASAN ---
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 24),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      "PANJANG RINGKASAN",
-                      style: TextStyle(color: Color(0xFF2F6555), fontSize: 10, fontWeight: FontWeight.bold),
-                    ),
-                    const SizedBox(height: 10),
-                    _buildDropdown(
-                      value: _selectedPanjang,
-                      items: _panjangOptions,
-                      onChanged: (val) => setState(() => _selectedPanjang = val!),
+                      child: const Icon(Icons.notifications_none_outlined,
+                          color: Color(0xFF006947), size: 20),
                     ),
                   ],
                 ),
               ),
-
-              const SizedBox(height: 20),
-
-              // --- PILIHAN JUMLAH SOAL ---
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 24),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      "JUMLAH SOAL KUIS",
-                      style: TextStyle(color: Color(0xFF2F6555), fontSize: 10, fontWeight: FontWeight.bold),
-                    ),
-                    const SizedBox(height: 10),
-                    _buildDropdown(
-                      value: _selectedSoal,
-                      items: _soalOptions,
-                      onChanged: (val) => setState(() => _selectedSoal = val!),
-                    ),
-                  ],
-                ),
-              ),
-
-              const SizedBox(height: 40),
-
-              // --- TOMBOL BUAT SEKARANG ---
-              Center(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 24),
-                  child: ElevatedButton(
-                    onPressed: () => Navigator.pushNamed(context, '/detail'),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF006947),
-                      foregroundColor: Colors.white,
-                      minimumSize: const Size(double.infinity, 60),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(9999)),
-                      elevation: 10,
-                      shadowColor: const Color(0x33006947),
-                    ),
-                    child: const Text(
-                      "Buat Ringkasan Sekarang",
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 40),
-            ],
+            ),
           ),
-        ),
+
+          // --- KONTEN ---
+          Expanded(
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(height: 20),
+
+                  // --- AREA UPLOAD (DASHED BORDER) ---
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.symmetric(vertical: 36),
+                      decoration: BoxDecoration(
+                        border: DashedBorder.fromBorderSide(
+                          dashLength: 12,
+                          side: const BorderSide(
+                              color: Color(0xFF81B8A5), width: 1.5),
+                        ),
+                        borderRadius: BorderRadius.circular(24),
+                        color: Colors.white.withOpacity(0.5),
+                      ),
+                      child: Column(
+                        children: [
+                          Container(
+                            width: 64,
+                            height: 64,
+                            decoration: const BoxDecoration(
+                              color: Color(0xFF69F6B8),
+                              shape: BoxShape.circle,
+                            ),
+                            child: const Icon(Icons.upload_file_outlined,
+                                size: 32, color: Color(0xFF006947)),
+                          ),
+                          const SizedBox(height: 16),
+                          const Text(
+                            "Tap untuk Upload File",
+                            style: TextStyle(
+                              color: Color(0xFF00362A),
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          const Text(
+                            "Dukung PDF, DOCX, atau Gambar",
+                            style: TextStyle(
+                                color: Color(0xFF2F6555), fontSize: 13),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+
+                  const SizedBox(height: 28),
+
+                  // --- SECTION TITLE: Pengaturan Rangkuman ---
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: Row(
+                      children: const [
+                        Icon(Icons.tune, color: Color(0xFF2F6555), size: 18),
+                        SizedBox(width: 6),
+                        Text(
+                          "Pengaturan Rangkuman",
+                          style: TextStyle(
+                            color: Color(0xFF00362A),
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  const SizedBox(height: 14),
+
+                  // --- CARD: Buat Flashcard Toggle ---
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(18),
+                      ),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 14),
+                      child: Row(
+                        children: [
+                          Container(
+                            width: 40,
+                            height: 40,
+                            decoration: BoxDecoration(
+                              color: const Color(0xFFEAFAF3),
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: const Icon(Icons.style_outlined,
+                                color: Color(0xFF006947), size: 22),
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: const [
+                                Text(
+                                  "Buat Flashcard",
+                                  style: TextStyle(
+                                    color: Color(0xFF00362A),
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                SizedBox(height: 2),
+                                Text(
+                                  "Otomatis buat kuis",
+                                  style: TextStyle(
+                                      color: Color(0xFF2F6555), fontSize: 12),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Switch(
+                            value: _buatFlashcard,
+                            onChanged: (val) =>
+                                setState(() => _buatFlashcard = val),
+                            activeColor: Colors.white,
+                            activeTrackColor: const Color(0xFF006947),
+                            inactiveThumbColor: Colors.white,
+                            inactiveTrackColor: const Color(0xFFCCCCCC),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+
+                  const SizedBox(height: 16),
+
+                  // --- PILIHAN PANJANG RINGKASAN ---
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          "PANJANG RINGKASAN",
+                          style: TextStyle(
+                              color: Color(0xFF2F6555),
+                              fontSize: 10,
+                              fontWeight: FontWeight.bold,
+                              letterSpacing: 0.5),
+                        ),
+                        const SizedBox(height: 8),
+                        _buildDropdown(
+                          value: _selectedPanjang,
+                          items: _panjangOptions,
+                          onChanged: (val) =>
+                              setState(() => _selectedPanjang = val!),
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  const SizedBox(height: 16),
+
+                  // --- PILIHAN JUMLAH SOAL ---
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          "JUMLAH SOAL KUIS",
+                          style: TextStyle(
+                              color: Color(0xFF2F6555),
+                              fontSize: 10,
+                              fontWeight: FontWeight.bold,
+                              letterSpacing: 0.5),
+                        ),
+                        const SizedBox(height: 8),
+                        _buildDropdown(
+                          value: _selectedSoal,
+                          items: _soalOptions,
+                          onChanged: (val) =>
+                              setState(() => _selectedSoal = val!),
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  const SizedBox(height: 32),
+
+                  // --- TOMBOL BUAT SEKARANG ---
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: ElevatedButton(
+                      onPressed: () =>
+                          Navigator.pushNamed(context, '/detail'),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFF006947),
+                        foregroundColor: Colors.white,
+                        minimumSize: const Size(double.infinity, 58),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(9999)),
+                        elevation: 6,
+                        shadowColor: const Color(0x40006947),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: const [
+                          Text(
+                            "Buat Rangkuman Sekarang",
+                            style: TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.bold),
+                          ),
+                          SizedBox(width: 8),
+                          Icon(Icons.arrow_forward, size: 18),
+                        ],
+                      ),
+                    ),
+                  ),
+
+                  const SizedBox(height: 16),
+
+                  // --- NEED HELP ---
+                  Center(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: const [
+                        Icon(Icons.help_outline,
+                            color: Color(0xFF2F6555), size: 14),
+                        SizedBox(width: 4),
+                        Text(
+                          "Need Help?",
+                          style: TextStyle(
+                              color: Color(0xFF2F6555),
+                              fontSize: 13,
+                              decoration: TextDecoration.underline),
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  const SizedBox(height: 32),
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -183,23 +335,26 @@ class CREATERANGKUMANState extends State<CREATERANGKUMAN> {
     required void Function(String?) onChanged,
   }) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
+      padding: const EdgeInsets.symmetric(horizontal: 16),
       decoration: BoxDecoration(
-        color: const Color(0xFFBFFEE7),
-        borderRadius: BorderRadius.circular(20),
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(14),
       ),
       child: DropdownButtonHideUnderline(
         child: DropdownButton<String>(
           value: value,
           isExpanded: true,
-          icon: const Icon(Icons.keyboard_arrow_down, color: Color(0xFF00362A)),
-          dropdownColor: const Color(0xFFBFFEE7),
-          borderRadius: BorderRadius.circular(20),
-          style: const TextStyle(color: Color(0xFF00362A), fontSize: 16),
-          items: items.map((item) => DropdownMenuItem(
-            value: item,
-            child: Text(item),
-          )).toList(),
+          icon: const Icon(Icons.keyboard_arrow_down,
+              color: Color(0xFF00362A)),
+          dropdownColor: Colors.white,
+          borderRadius: BorderRadius.circular(14),
+          style: const TextStyle(color: Color(0xFF00362A), fontSize: 15),
+          items: items
+              .map((item) => DropdownMenuItem(
+                    value: item,
+                    child: Text(item),
+                  ))
+              .toList(),
           onChanged: onChanged,
         ),
       ),

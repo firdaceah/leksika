@@ -10,104 +10,214 @@ class RiwayatState extends State<Riwayat> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      // ✅ Background hijau muda sesuai desain
+      backgroundColor: const Color(0xFFDFF5EC),
+
       floatingActionButton: FloatingActionButton(
         onPressed: () => Navigator.pushNamed(context, '/create-rangkuman'),
-        backgroundColor: const Color(0xFF006947),
+        backgroundColor: Colors.white,
         shape: const CircleBorder(),
-        child: const Icon(Icons.add, color: Colors.white, size: 30),
+        child: const Icon(Icons.add, color: Color(0xFF006947), size: 28),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
 
       bottomNavigationBar: _buildBottomNavbar(),
 
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(height: 20),
-              _buildHeaderTitle(),
-
-              _buildHistoryCard(
-                "Struktur Data & Algoritma",
-                "Mempelajari fundamental linked list dan binary tree transversal secara mendalam.",
-                "2 hours ago",
-                "18 pages",
-                const Color(0xFF9DECD2),
-              ),
-              _buildHistoryCard(
-                "Kemerdekaan RI",
-                "Analisis pergeseran kekuatan ekonomi di Asia Tenggara dan dampaknya pada perdagangan.",
-                "3 days ago",
-                "11 pages",
-                const Color(0xFF9DECD2),
-              ),
-
-              const SizedBox(height: 100),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildHeaderTitle() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 10),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      body: Column(
         children: [
-          const Text("Riwayat Rangkuman", 
-            style: TextStyle(color: Color(0xFF00362A), fontSize: 24, fontWeight: FontWeight.bold)),
-          const SizedBox(height: 4),
-          Container(width: 48, height: 4, color: const Color(0xFF006947)),
+          // ✅ AppBar hijau gelap custom
+          _buildAppBar(context),
+
+          // ✅ Konten scrollable
+          Expanded(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.symmetric(vertical: 16),
+              child: Column(
+                children: [
+                  _buildHistoryCard(
+                    context,
+                    "Struktur Data & Algoritma",
+                    "Mempelajari fundamental linked list dan binary tree transversal secara mendalam.",
+                    "2 hours ago",
+                    "18 pages",
+                    Icons.monitor_outlined,
+                  ),
+                  _buildHistoryCard(
+                    context,
+                    "Kemerdekaan RI",
+                    "Analisis pergeseran kekuatan ekonomi di Asia Tenggara dan dampaknya pada perdagangan.",
+                    "3 days ago",
+                    "11 pages",
+                    Icons.language,
+                  ),
+                  const SizedBox(height: 100),
+                ],
+              ),
+            ),
+          ),
         ],
       ),
     );
   }
 
-  Widget _buildHistoryCard(String title, String desc, String time, String pages, Color iconBg) {
+Widget _buildAppBar(BuildContext context) {
+  return Container(
+    decoration: const BoxDecoration(
+      color: Color(0xFF006947),
+      borderRadius: BorderRadius.only(
+        bottomLeft: Radius.circular(24),
+        bottomRight: Radius.circular(24),
+      ),
+    ),
+    child: SafeArea(
+      bottom: false,
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(4, 8, 16, 16),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            IconButton(
+              icon: const Icon(Icons.arrow_back_ios,
+                  color: Colors.white, size: 20),
+              onPressed: () => Navigator.pop(context),
+            ),
+            const Text(
+              "Riwayat Rangkuman",
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            Container(
+              width: 38,
+              height: 38,
+              decoration: const BoxDecoration(
+                color: Colors.white,
+                shape: BoxShape.circle,
+              ),
+              child: const Icon(Icons.notifications_none_outlined,
+                  color: Color(0xFF006947), size: 20),
+            ),
+          ],
+        ),
+      ),
+    ),
+  );
+}
+
+  // ✅ Card putih dengan shadow, sesuai desain
+  Widget _buildHistoryCard(
+    BuildContext context,
+    String title,
+    String desc,
+    String time,
+    String pages,
+    IconData cardIcon,
+  ) {
     return GestureDetector(
       onTap: () => Navigator.pushNamed(context, '/detail'),
       child: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 24, vertical: 10),
-        padding: const EdgeInsets.all(24),
+        margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+        padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(32),
-          boxShadow: const [BoxShadow(color: Color(0x0800362A), blurRadius: 20, offset: Offset(0, 4))],
+          borderRadius: BorderRadius.circular(24),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.06),
+              blurRadius: 16,
+              offset: const Offset(0, 4),
+            ),
+          ],
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // ── Baris atas: ikon + badge RINGKASAN ──
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
+                // ✅ Icon dalam kotak hijau muda
                 Container(
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(color: iconBg, borderRadius: BorderRadius.circular(8)),
-                  child: const Icon(Icons.description, size: 20, color: Color(0xFF006947)),
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFB7EDD9),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Icon(cardIcon, size: 22, color: const Color(0xFF006947)),
                 ),
+
+                // ✅ Badge "RINGKASAN"
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-                  decoration: BoxDecoration(color: const Color(0xFF69F6B8), borderRadius: BorderRadius.circular(10)),
-                  child: const Text("RINGKASAN", style: TextStyle(color: Color(0xFF005A3C), fontSize: 10, fontWeight: FontWeight.bold)),
-                )
+                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 5),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF69F6B8),
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: const Text(
+                    "RINGKASAN",
+                    style: TextStyle(
+                      color: Color(0xFF004D33),
+                      fontSize: 10,
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: 0.4,
+                    ),
+                  ),
+                ),
               ],
             ),
+
             const SizedBox(height: 16),
-            Text(title, style: const TextStyle(color: Color(0xFF00362A), fontSize: 20, fontWeight: FontWeight.bold)),
+
+            // ── Judul ──
+            Text(
+              title,
+              style: const TextStyle(
+                color: Color(0xFF00362A),
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+
             const SizedBox(height: 8),
-            Text(desc, style: const TextStyle(color: Color(0xFF2F6555), fontSize: 14)),
-            const Divider(height: 32, color: Color(0x1A81B8A5)),
+
+            // ── Deskripsi ──
+            Text(
+              desc,
+              style: const TextStyle(
+                color: Color(0xFF2F6555),
+                fontSize: 14,
+                height: 1.5,
+              ),
+            ),
+
+            // ── Divider ──
+            const Padding(
+              padding: EdgeInsets.symmetric(vertical: 14),
+              child: Divider(height: 1, color: Color(0xFFDDEDE8)),
+            ),
+
+            // ── Footer: waktu & halaman dengan ikon ──
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(time, style: const TextStyle(color: Color(0xFF2F6555), fontSize: 12)),
-                Text(pages, style: const TextStyle(color: Color(0xFF2F6555), fontSize: 12)),
+                Row(
+                  children: [
+                    const Icon(Icons.access_time_rounded, size: 14, color: Color(0xFF2F6555)),
+                    const SizedBox(width: 5),
+                    Text(time, style: const TextStyle(color: Color(0xFF2F6555), fontSize: 12)),
+                  ],
+                ),
+                Row(
+                  children: [
+                    const Icon(Icons.description_outlined, size: 14, color: Color(0xFF2F6555)),
+                    const SizedBox(width: 5),
+                    Text(pages, style: const TextStyle(color: Color(0xFF2F6555), fontSize: 12)),
+                  ],
+                ),
               ],
-            )
+            ),
           ],
         ),
       ),
@@ -125,7 +235,7 @@ class RiwayatState extends State<Riwayat> {
           Row(
             children: [
               _navItem(Icons.home_outlined, "BERANDA", false, '/home'),
-              _navItem(Icons.history, "RIWAYAT", true, '/riwayat'),
+              _navItem(Icons.description_outlined, "RIWAYAT", true, '/riwayat'),
             ],
           ),
           Row(
@@ -141,14 +251,34 @@ class RiwayatState extends State<Riwayat> {
 
   Widget _navItem(IconData icon, String label, bool isActive, String route) {
     return InkWell(
-      onTap: () { if (!isActive) Navigator.pushNamed(context, route); },
+      onTap: () {
+        if (!isActive) Navigator.pushNamed(context, route);
+      },
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 15),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(icon, color: isActive ? const Color(0xFF064E3B) : const Color(0xFF059669)),
-            Text(label, style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: isActive ? const Color(0xFF064E3B) : const Color(0xFF059669))),
+            // ✅ Tab aktif pakai background hijau muda bulat
+            isActive
+                ? Container(
+                    padding: const EdgeInsets.all(6),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFB7EDD9),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Icon(icon, color: const Color(0xFF064E3B), size: 20),
+                  )
+                : Icon(icon, color: const Color(0xFF059669), size: 22),
+            const SizedBox(height: 2),
+            Text(
+              label,
+              style: TextStyle(
+                fontSize: 10,
+                fontWeight: FontWeight.bold,
+                color: isActive ? const Color(0xFF064E3B) : const Color(0xFF059669),
+              ),
+            ),
           ],
         ),
       ),

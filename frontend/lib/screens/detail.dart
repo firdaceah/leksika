@@ -14,49 +14,47 @@ class RingkasanState extends State<Ringkasan> {
       body: SafeArea(
         child: Column(
           children: [
-            // --- CUSTOM APP BAR (BACK BUTTON) ---
+            // --- CUSTOM APP BAR ---
             Padding(
-              padding: const EdgeInsets.all(16.0),
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
               child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   IconButton(
                     icon: const Icon(Icons.arrow_back_ios_new, color: Color(0xFF00362A)),
-                    onPressed: () => Navigator.pop(context), // Fungsi Back
+                    onPressed: () => Navigator.pop(context),
                   ),
                   const Text(
-                    "Detail Ringkasan",
+                    "Rangkuman",
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
                       color: Color(0xFF00362A),
                     ),
                   ),
+                  // Ikon lonceng sesuai desain
+                  Container(
+                    margin: const EdgeInsets.only(right: 8),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF006947),
+                      borderRadius: BorderRadius.circular(50),
+                    ),
+                    child: IconButton(
+                      icon: const Icon(Icons.notifications_outlined, color: Colors.white, size: 20),
+                      onPressed: () {},
+                    ),
+                  ),
                 ],
               ),
             ),
 
-            // --- KONTEN UTAMA (SCROLLABLE) ---
+            // --- KONTEN UTAMA ---
             Expanded(
               child: SingleChildScrollView(
                 padding: const EdgeInsets.symmetric(horizontal: 24),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Banner Image Background (Optional if using your network image)
-                    Container(
-                      width: double.infinity,
-                      height: 150,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(24),
-                        image: const DecorationImage(
-                          image: NetworkImage("https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/3a840d30-4bfe-4ad1-bd66-5e6e13c94beb"),
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                    ),
-                    
-                    const SizedBox(height: 24),
-
                     // Judul Materi
                     const Text(
                       "Struktur Data & Algoritma",
@@ -66,24 +64,22 @@ class RingkasanState extends State<Ringkasan> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    const SizedBox(height: 8),
+                    const SizedBox(height: 6),
                     const Text(
-                      "18 hal  • Dibuat tadi • 3 poin utama",
+                      "Dibuat dari 18 Halaman",
                       style: TextStyle(color: Color(0xFF2F6555), fontSize: 14),
                     ),
 
-                    const SizedBox(height: 30),
+                    const SizedBox(height: 24),
 
-                    // Poin Ringkasan 1
+                    // Poin Ringkasan
                     _buildPointCard(
                       "Konsep Array & Linked List",
-                      "Array menyimpan elemen secara berurutan di memori, akses O(1). Linked List fleksibel dalam insert/delete namun akses O(n). Pilih berdasarkan kebutuhan operasi dominan."
+                      "Array menyimpan elemen secara berurutan di memori, akses O(1). Linked List fleksibel dalam insert/delete namun akses O(n). Pilih berdasarkan kebutuhan operasi dominan.",
                     ),
-
-                    // Poin Ringkasan 2
                     _buildPointCard(
                       "Algoritma Sorting",
-                      "Bubble sort O(n2) cocok untuk data kecil. Merge sort O(n log n) lebih efisien untuk dataset besar dengan teknik divide and conquer."
+                      "Bubble sort O(n2) cocok untuk data kecil. Merge sort O(n log n) lebih efisien untuk dataset besar dengan teknik divide and conquer.",
                     ),
 
                     const SizedBox(height: 40),
@@ -97,44 +93,61 @@ class RingkasanState extends State<Ringkasan> {
     );
   }
 
-  // Widget Helper untuk Kartu Poin (Desain tetap sama)
   Widget _buildPointCard(String title, String content) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 20),
-      padding: const EdgeInsets.all(24),
+      margin: const EdgeInsets.only(bottom: 16),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(32),
-        boxShadow: const [
-          BoxShadow(color: Color(0x0800362A), blurRadius: 20, offset: Offset(0, 4)),
-        ],
+        // ✅ Card hijau muda, konsisten sama halaman Riwayat
+        color: const Color(0xFFE8F7F2),
+        borderRadius: BorderRadius.circular(24),
+        border: Border.all(color: const Color(0xFFB2DFD0), width: 1),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            children: [
-              Container(
-                width: 12,
-                height: 20,
-                decoration: BoxDecoration(
-                  color: const Color(0xFF67B187),
-                  borderRadius: BorderRadius.circular(4),
+          // ── Header card ──
+          Padding(
+            padding: const EdgeInsets.fromLTRB(20, 18, 20, 14),
+            child: Row(
+              children: [
+                // Bullet hijau sesuai desain
+                Container(
+                  width: 14,
+                  height: 14,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF006947),
+                    borderRadius: BorderRadius.circular(4),
+                  ),
                 ),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Text(
-                  title,
-                  style: const TextStyle(color: Color(0xFF00362A), fontSize: 18, fontWeight: FontWeight.bold),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: Text(
+                    title,
+                    style: const TextStyle(
+                      color: Color(0xFF00362A),
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
-          const SizedBox(height: 12),
-          Text(
-            content,
-            style: const TextStyle(color: Colors.black87, fontSize: 16, height: 1.5),
+
+          // ── Garis pemisah ──
+          const Divider(height: 1, color: Color(0xFFB2DFD0)),
+
+          // ── Isi konten ──
+          Padding(
+            padding: const EdgeInsets.fromLTRB(20, 14, 20, 14),
+            child: Text(
+              content,
+              style: const TextStyle(
+                color: Color(0xFF2F6555),
+                fontSize: 14,
+                height: 1.6,
+              ),
+            ),
           ),
         ],
       ),
