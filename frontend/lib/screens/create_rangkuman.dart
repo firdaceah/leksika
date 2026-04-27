@@ -8,12 +8,27 @@ class CREATERANGKUMAN extends StatefulWidget {
 }
 
 class CREATERANGKUMANState extends State<CREATERANGKUMAN> {
+  String _selectedPanjang = "Sedang (5-7 Paragraf)";
+  String _selectedSoal = "10 Soal";
+
+  final List<String> _panjangOptions = [
+    "Singkat (3-4 Paragraf)",
+    "Sedang (5-7 Paragraf)",
+    "Panjang (8-10 Paragraf)",
+  ];
+
+  final List<String> _soalOptions = [
+    "5 Soal",
+    "10 Soal",
+    "15 Soal",
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
-        child: SingleChildScrollView( // AGAR BISA SCROLL DAN TIDAK ERROR
+        child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -95,10 +110,16 @@ class CREATERANGKUMANState extends State<CREATERANGKUMAN> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text("PANJANG RINGKASAN", 
-                      style: TextStyle(color: Color(0xFF2F6555), fontSize: 10, fontWeight: FontWeight.bold)),
+                    const Text(
+                      "PANJANG RINGKASAN",
+                      style: TextStyle(color: Color(0xFF2F6555), fontSize: 10, fontWeight: FontWeight.bold),
+                    ),
                     const SizedBox(height: 10),
-                    _buildDropdownContainer("Sedang (5-7 Paragraf)"),
+                    _buildDropdown(
+                      value: _selectedPanjang,
+                      items: _panjangOptions,
+                      onChanged: (val) => setState(() => _selectedPanjang = val!),
+                    ),
                   ],
                 ),
               ),
@@ -111,10 +132,16 @@ class CREATERANGKUMANState extends State<CREATERANGKUMAN> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text("JUMLAH SOAL KUIS", 
-                      style: TextStyle(color: Color(0xFF2F6555), fontSize: 10, fontWeight: FontWeight.bold)),
+                    const Text(
+                      "JUMLAH SOAL KUIS",
+                      style: TextStyle(color: Color(0xFF2F6555), fontSize: 10, fontWeight: FontWeight.bold),
+                    ),
                     const SizedBox(height: 10),
-                    _buildDropdownContainer("10 Soal"),
+                    _buildDropdown(
+                      value: _selectedSoal,
+                      items: _soalOptions,
+                      onChanged: (val) => setState(() => _selectedSoal = val!),
+                    ),
                   ],
                 ),
               ),
@@ -126,10 +153,7 @@ class CREATERANGKUMANState extends State<CREATERANGKUMAN> {
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 24),
                   child: ElevatedButton(
-                    onPressed: () {
-                      // Logika proses AI
-                      Navigator.pushNamed(context, '/detail');
-                    },
+                    onPressed: () => Navigator.pushNamed(context, '/detail'),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFF006947),
                       foregroundColor: Colors.white,
@@ -138,8 +162,10 @@ class CREATERANGKUMANState extends State<CREATERANGKUMAN> {
                       elevation: 10,
                       shadowColor: const Color(0x33006947),
                     ),
-                    child: const Text("Buat Ringkasan Sekarang", 
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                    child: const Text(
+                      "Buat Ringkasan Sekarang",
+                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
                   ),
                 ),
               ),
@@ -151,20 +177,31 @@ class CREATERANGKUMANState extends State<CREATERANGKUMAN> {
     );
   }
 
-  // Helper untuk box dropdown agar desain konsisten
-  Widget _buildDropdownContainer(String text) {
+  Widget _buildDropdown({
+    required String value,
+    required List<String> items,
+    required void Function(String?) onChanged,
+  }) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+      padding: const EdgeInsets.symmetric(horizontal: 20),
       decoration: BoxDecoration(
         color: const Color(0xFFBFFEE7),
         borderRadius: BorderRadius.circular(20),
       ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(text, style: const TextStyle(color: Color(0xFF00362A), fontSize: 16)),
-          const Icon(Icons.keyboard_arrow_down, color: Color(0xFF00362A)),
-        ],
+      child: DropdownButtonHideUnderline(
+        child: DropdownButton<String>(
+          value: value,
+          isExpanded: true,
+          icon: const Icon(Icons.keyboard_arrow_down, color: Color(0xFF00362A)),
+          dropdownColor: const Color(0xFFBFFEE7),
+          borderRadius: BorderRadius.circular(20),
+          style: const TextStyle(color: Color(0xFF00362A), fontSize: 16),
+          items: items.map((item) => DropdownMenuItem(
+            value: item,
+            child: Text(item),
+          )).toList(),
+          onChanged: onChanged,
+        ),
       ),
     );
   }
