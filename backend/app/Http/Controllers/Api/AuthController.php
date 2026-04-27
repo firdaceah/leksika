@@ -3,10 +3,13 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Mail\OtpMail;
+use App\Models\EmailOtp;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
@@ -17,11 +20,14 @@ class AuthController extends Controller
         $validator = Validator::make($request->all(), [
             'name'     => 'required|string|max:255',
             'email'    => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:8|confirmed', 
+            'password' => 'required|string|min:8|confirmed',
         ]);
 
         if ($validator->fails()) {
-            return response()->json($validator->errors(), 422);
+            return response()->json([
+                'status'  => false,
+                'message' => $validator->errors(),
+            ], 422);
         }
 
         $user = User::create([
@@ -30,33 +36,134 @@ class AuthController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
+        // Generate & simpan OTP
+        $otp = str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
+
+        EmailOtp::updateOrCreate(
+            ['user_id' => $user->id],
+            [
+                'otp'        => $otp,
+                'expires_at' => now()->addMinutes(10),
+            ]
+        );
+
+        // Kirim email OTP
+        Mail::to($user->email)->send(new OtpMail($otp, $user->name));
+
         $token = $user->createToken('auth_token')->plainTextToken;
 
         return response()->json([
-            'message'      => 'Registrasi berhasil',
-            'access_token' => $token,
-            'token_type'   => 'Bearer',
-            'user'         => $user
+            'status'  => true,
+            'message' => 'Registrasi berhasil! Cek email untuk kode OTP.',
+            'token'   => $token,
+            'user'    => $user,
         ], 201);
+    }
+
+    // --- VERIFIKASI OTP ---
+    public function verifyOtp(Request $request)
+    {
+        $request->validate([
+            'otp' => 'required|string|size:6',
+        ]);
+
+        $user     = $request->user();
+        $emailOtp = EmailOtp::where('user_id', $user->id)
+                            ->where('otp', $request->otp)
+                            ->first();
+
+        // Cek OTP valid
+        if (!$emailOtp) {
+            return response()->json([
+                'status'  => false,
+                'message' => 'Kode OTP tidak valid.',
+            ], 400);
+        }
+
+        // Cek OTP kadaluarsa
+        if ($emailOtp->expires_at->isPast()) {
+            $emailOtp->delete();
+            return response()->json([
+                'status'  => false,
+                'message' => 'Kode OTP sudah kadaluarsa.',
+            ], 400);
+        }
+
+        // Verifikasi email & hapus OTP
+        $user->markEmailAsVerified();
+        $emailOtp->delete();
+
+        return response()->json([
+            'status'  => true,
+            'message' => 'Email berhasil diverifikasi!',
+        ]);
+    }
+
+    // --- RESEND OTP ---
+    public function resendOtp(Request $request)
+    {
+        $user = $request->user();
+
+        // Cek sudah verified belum
+        if ($user->hasVerifiedEmail()) {
+            return response()->json([
+                'status'  => false,
+                'message' => 'Email sudah terverifikasi.',
+            ], 400);
+        }
+
+        // Generate OTP baru
+        $otp = str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
+
+        EmailOtp::updateOrCreate(
+            ['user_id' => $user->id],
+            [
+                'otp'        => $otp,
+                'expires_at' => now()->addMinutes(10),
+            ]
+        );
+
+        // Kirim ulang email OTP
+        Mail::to($user->email)->send(new OtpMail($otp, $user->name));
+
+        return response()->json([
+            'status'  => true,
+            'message' => 'Kode OTP baru telah dikirim.',
+        ]);
     }
 
     // --- LOGIN ---
     public function login(Request $request)
     {
+        $request->validate([
+            'email'    => 'required|email',
+            'password' => 'required',
+        ]);
+
         if (!Auth::attempt($request->only('email', 'password'))) {
             return response()->json([
-                'message' => 'Email atau password salah'
+                'status'  => false,
+                'message' => 'Email atau password salah.',
             ], 401);
         }
 
-        $user  = User::where('email', $request->email)->firstOrFail();
+        $user = Auth::user();
+
+        // Tolak login kalau belum verifikasi
+        if (!$user->hasVerifiedEmail()) {
+            return response()->json([
+                'status'  => false,
+                'message' => 'Email belum diverifikasi. Cek inbox kamu!',
+            ], 403);
+        }
+
         $token = $user->createToken('auth_token')->plainTextToken;
 
         return response()->json([
-            'message'      => 'Login berhasil',
-            'access_token' => $token,
-            'token_type'   => 'Bearer',
-            'user'         => $user
+            'status'  => true,
+            'message' => 'Login berhasil!',
+            'token'   => $token,
+            'user'    => $user,
         ]);
     }
 
@@ -66,7 +173,8 @@ class AuthController extends Controller
         $request->user()->currentAccessToken()->delete();
 
         return response()->json([
-            'message' => 'Berhasil logout'
+            'status'  => true,
+            'message' => 'Berhasil logout.',
         ]);
     }
 }
