@@ -57,3 +57,18 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 ## License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+
+## PDF to Text (Windows)
+
+Backend ini mendukung ekstraksi teks PDF dengan 2 opsi engine:
+
+- `PDF_TEXT_ENGINE=php` (default): pure PHP (lebih portable, cocok untuk shared hosting/XAMPP)
+- `PDF_TEXT_ENGINE=poppler`: Poppler `pdftotext` (biasanya paling akurat untuk PDF text-based)
+
+1. Jika ingin pakai Poppler: install Poppler untuk Windows (yang menyediakan `pdftotext.exe`).
+2. Tambahkan folder `bin` Poppler ke `PATH`, **atau** isi env `PDFTOTEXT_PATH` di `.env` dengan path full ke `pdftotext.exe`.
+	- Contoh: `PDFTOTEXT_PATH=C:\\poppler\\Library\\bin\\pdftotext.exe`
+3. Test dari backend:
+	- `php artisan document:pdf-to-text "C:\\path\\to\\file.pdf"`
+
+Catatan: Jika PDF hasil scan (gambar), output bisa kosong dan butuh OCR.
