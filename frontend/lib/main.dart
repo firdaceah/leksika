@@ -1,15 +1,10 @@
 import 'package:flutter/material.dart';
 import 'screens/splashscreen.dart';
-import 'screens/register.dart';
+import 'screens/onboarding.dart';
 import 'screens/login.dart';
-import 'screens/home.dart';
-import 'screens/create_rangkuman.dart';
-import 'screens/detail.dart';
-import 'screens/riwayat.dart';
+import 'screens/register.dart';
 
-void main() {
-  runApp(const MyApp());
-}
+void main() => runApp(const MyApp());
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -17,20 +12,16 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Leksika AI',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        useMaterial3: true,
-        primarySwatch: Colors.teal,
-      ),
+      title: 'LEKSIKA',
+      // HARUS DISET KE '/' BIAR MULAI DARI SPLASH
       initialRoute: '/', 
       routes: {
-        '/': (context) => const Splashscreen(),
-        '/login': (context) => const Login(),
-        '/register': (context) => const Register(),
-        '/home': (context) => const HomePage(),
-        '/create-rangkuman': (context) => const CREATERANGKUMAN(),
-        '/riwayat': (context) => const Riwayat(),
+        '/': (context) => const SplashPage(),
+        '/onboarding': (context) => const Onboarding(),
+        '/login': (context) => const LoginPage(),
+        '/register': (context) => const RegisterPage(),
+        '/home': (context) => const Scaffold(body: Center(child: Text("Halaman Utama"))),
       },
     );
   }
