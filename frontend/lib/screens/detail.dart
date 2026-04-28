@@ -1,154 +1,70 @@
 import 'package:flutter/material.dart';
 
-class Ringkasan extends StatefulWidget {
-  const Ringkasan({super.key});
-  @override
-  RingkasanState createState() => RingkasanState();
-}
+class Ringkasan extends StatelessWidget {
+  final String title;
+  final String pageCount;
+  final List<Map<String, String>> contents;
 
-class RingkasanState extends State<Ringkasan> {
+  const Ringkasan({
+    super.key,
+    required this.title,
+    required this.pageCount,
+    required this.contents,
+  });
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
-      body: SafeArea(
-        child: Column(
-          children: [
-            // --- CUSTOM APP BAR ---
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      backgroundColor: const Color(0xFFDFF5EC),
+      body: Column(
+        children: [
+          _buildAppBar(context),
+          Expanded(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  IconButton(
-                    icon: const Icon(Icons.arrow_back_ios_new, color: Color(0xFF00362A)),
-                    onPressed: () => Navigator.pop(context),
-                  ),
-                  const Text(
-                    "Rangkuman",
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: Color(0xFF00362A),
-                    ),
-                  ),
-                  // Ikon lonceng sesuai desain
-                  Container(
-                    margin: const EdgeInsets.only(right: 8),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFF006947),
-                      borderRadius: BorderRadius.circular(50),
-                    ),
-                    child: IconButton(
-                      icon: const Icon(Icons.notifications_outlined, color: Colors.white, size: 20),
-                      onPressed: () {},
-                    ),
-                  ),
+                  Text(title, style: const TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: Color(0xFF00362A))),
+                  const SizedBox(height: 8),
+                  Text("Dibuat dari $pageCount", style: const TextStyle(fontSize: 16, color: Color(0xFF2F6555))),
+                  const SizedBox(height: 24),
+                  ...contents.map((data) => _buildContentCard(data['subTitle'] ?? '', data['body'] ?? '')).toList(),
                 ],
               ),
             ),
-
-            // --- KONTEN UTAMA ---
-            Expanded(
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.symmetric(horizontal: 24),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Judul Materi
-                    const Text(
-                      "Struktur Data & Algoritma",
-                      style: TextStyle(
-                        color: Color(0xFF00362A),
-                        fontSize: 28,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(height: 6),
-                    const Text(
-                      "Dibuat dari 18 Halaman",
-                      style: TextStyle(color: Color(0xFF2F6555), fontSize: 14),
-                    ),
-
-                    const SizedBox(height: 24),
-
-                    // Poin Ringkasan
-                    _buildPointCard(
-                      "Konsep Array & Linked List",
-                      "Array menyimpan elemen secara berurutan di memori, akses O(1). Linked List fleksibel dalam insert/delete namun akses O(n). Pilih berdasarkan kebutuhan operasi dominan.",
-                    ),
-                    _buildPointCard(
-                      "Algoritma Sorting",
-                      "Bubble sort O(n2) cocok untuk data kecil. Merge sort O(n log n) lebih efisien untuk dataset besar dengan teknik divide and conquer.",
-                    ),
-
-                    const SizedBox(height: 40),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
 
-  Widget _buildPointCard(String title, String content) {
+  Widget _buildAppBar(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 16),
-      decoration: BoxDecoration(
-        // ✅ Card hijau muda, konsisten sama halaman Riwayat
-        color: const Color(0xFFE8F7F2),
-        borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: const Color(0xFFB2DFD0), width: 1),
+      padding: const EdgeInsets.only(top: 50, bottom: 20, left: 10, right: 20),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          IconButton(icon: const Icon(Icons.arrow_back_ios_new, color: Color(0xFF00362A)), onPressed: () => Navigator.pop(context)),
+          const Text("Rangkuman", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFF00362A))),
+          const CircleAvatar(backgroundColor: Color(0xFF006947), child: Icon(Icons.notifications_none, color: Colors.white, size: 20)),
+        ],
       ),
+    );
+  }
+
+  Widget _buildContentCard(String subTitle, String body) {
+    return Container(
+      width: double.infinity,
+      margin: const EdgeInsets.only(bottom: 20),
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(color: const Color(0xFFF1FAF7), borderRadius: BorderRadius.circular(24), border: Border.all(color: const Color(0xFFB7EDD9), width: 1.5)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // ── Header card ──
-          Padding(
-            padding: const EdgeInsets.fromLTRB(20, 18, 20, 14),
-            child: Row(
-              children: [
-                // Bullet hijau sesuai desain
-                Container(
-                  width: 14,
-                  height: 14,
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF006947),
-                    borderRadius: BorderRadius.circular(4),
-                  ),
-                ),
-                const SizedBox(width: 10),
-                Expanded(
-                  child: Text(
-                    title,
-                    style: const TextStyle(
-                      color: Color(0xFF00362A),
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-
-          // ── Garis pemisah ──
-          const Divider(height: 1, color: Color(0xFFB2DFD0)),
-
-          // ── Isi konten ──
-          Padding(
-            padding: const EdgeInsets.fromLTRB(20, 14, 20, 14),
-            child: Text(
-              content,
-              style: const TextStyle(
-                color: Color(0xFF2F6555),
-                fontSize: 14,
-                height: 1.6,
-              ),
-            ),
-          ),
+          Text(subTitle, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color(0xFF00362A))),
+          const Divider(color: Color(0xFFB7EDD9), height: 24),
+          Text(body, style: const TextStyle(fontSize: 15, color: Color(0xFF2F6555), height: 1.6)),
         ],
       ),
     );

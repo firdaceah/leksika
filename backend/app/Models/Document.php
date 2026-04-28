@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Document extends Model
 {
-    protected $fillable = ['user_id', 'file_name', 'file_path'];
+    protected $fillable = ['user_id', 'file_name', 'file_path', 'extracted_text', 'extraction_engine'];
 
     public function user()
     {

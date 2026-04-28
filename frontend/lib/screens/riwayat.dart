@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'detail.dart'; // Pastikan file detail.dart sudah kamu update juga ya!
 import 'bottom_navbar.dart'; // 👈 import shared navbar
 
 class Riwayat extends StatefulWidget {
   const Riwayat({super.key});
+
   @override
   RiwayatState createState() => RiwayatState();
 }
@@ -11,7 +13,7 @@ class RiwayatState extends State<Riwayat> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFE8FAF2), // ✅ sama dengan home
+      backgroundColor: const Color(0xFFDFF5EC),
       floatingActionButton: FloatingActionButton(
         onPressed: () => Navigator.pushNamed(context, '/create-rangkuman'),
         backgroundColor: const Color(0xFF006947), // ✅ sama dengan home
@@ -31,21 +33,44 @@ class RiwayatState extends State<Riwayat> {
               padding: const EdgeInsets.symmetric(vertical: 16),
               child: Column(
                 children: [
+                  // --- KARTU 1 ---
                   _buildHistoryCard(
                     context,
                     "Struktur Data & Algoritma",
                     "Mempelajari fundamental linked list dan binary tree transversal secara mendalam.",
                     "2 hours ago",
-                    "18 pages",
+                    "18 Halaman",
                     Icons.monitor_outlined,
+                    [
+                      {
+                        "subTitle": "Konsep Array & Linked List",
+                        "body": "Array menyimpan elemen secara berurutan di memori, akses O(1). Linked List fleksibel dalam insert/delete namun akses O(n). Pilih berdasarkan kebutuhan operasi dominan."
+                      },
+                      {
+                        "subTitle": "Algoritma Sorting",
+                        "body": "Bubble sort O(n2) cocok untuk data kecil. Merge sort O(n log n) lebih efisien untuk dataset besar dengan teknik divide and conquer."
+                      },
+                    ],
                   ),
+
+                  // --- KARTU 2 ---
                   _buildHistoryCard(
                     context,
                     "Kemerdekaan RI",
                     "Analisis pergeseran kekuatan ekonomi di Asia Tenggara dan dampaknya pada perdagangan.",
                     "3 days ago",
-                    "11 pages",
-                    Icons.language,
+                    "11 Halaman",
+                    Icons.language_outlined,
+                    [
+                      {
+                        "subTitle": "Peristiwa Rengasdengklok",
+                        "body": "Golongan muda mendesak Soekarno-Hatta untuk segera memproklamasikan kemerdekaan setelah Jepang menyerah."
+                      },
+                      {
+                        "subTitle": "Makna Proklamasi",
+                        "body": "Proklamasi 17 Agustus 1945 menandai lahirnya negara berdaulat dan titik balik perjuangan bangsa Indonesia."
+                      },
+                    ],
                   ),
                   const SizedBox(height: 100),
                 ],
@@ -120,9 +145,21 @@ class RiwayatState extends State<Riwayat> {
     String time,
     String pages,
     IconData cardIcon,
+    List<Map<String, String>> detailContent,
   ) {
     return GestureDetector(
-      onTap: () => Navigator.pushNamed(context, '/detail'),
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => Ringkasan(
+              title: title,
+              pageCount: pages,
+              contents: detailContent,
+            ),
+          ),
+        );
+      },
       child: Container(
         margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
         padding: const EdgeInsets.all(18),
@@ -223,4 +260,6 @@ class RiwayatState extends State<Riwayat> {
       ),
     );
   }
+
+  
 }

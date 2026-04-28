@@ -30,7 +30,6 @@ class MyApp extends StatelessWidget {
         '/register': (context) => const Register(),
         '/home': (context) => const HomePage(),
         '/create-rangkuman': (context) => const CREATERANGKUMAN(),
-        '/detail': (context) => const Ringkasan(),
         '/riwayat': (context) => const Riwayat(),
       },
     );
