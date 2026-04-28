@@ -19,6 +19,8 @@ Route::middleware('auth:sanctum')->group(function () {
 Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
 
+    Route::get('/documents', [DocumentController::class, 'index']);
+
     Route::post('/documents', [DocumentController::class, 'store']);
 
     Route::get('/user', function (Request $request) {

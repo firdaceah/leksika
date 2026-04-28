@@ -12,6 +12,22 @@ use Illuminate\Support\Facades\Storage;
 
 class DocumentController extends Controller
 {
+    public function index(Request $request)
+    {
+        $user = $request->user();
+
+        $history = Document::where('user_id', $user->id)
+            ->with('summary') 
+            ->latest()
+            ->get();
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Riwayat berhasil diambil.',
+            'data' => $history
+        ]);
+    }
+
     public function store(Request $request, SummaryService $aiService)
     {
         $validated = $request->validate([
@@ -32,7 +48,7 @@ class DocumentController extends Controller
         ]);
 
         try {
-            
+
             $text = $aiService->extractText($absolutePath);
 
             if (!$text) {
