@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'bottom_navbar.dart'; // 👈 import shared navbar
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -10,17 +11,20 @@ class HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFEAFAF3),
+      backgroundColor: const Color(0xFFE8FAF2),
       floatingActionButton: FloatingActionButton(
         onPressed: () => Navigator.pushNamed(context, '/create-rangkuman'),
         backgroundColor: const Color(0xFF006947),
         shape: const CircleBorder(),
-        child: const Icon(Icons.add, color: Colors.white, size: 30),
+        elevation: 4,
+        child: const Icon(Icons.add, color: Colors.white, size: 28),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      bottomNavigationBar: _buildBottomNavbar(),
+      // ✅ Pakai shared navbar, activeIndex: 0 = BERANDA
+      bottomNavigationBar: const BottomNavbar(activeIndex: 0),
       body: SafeArea(
         child: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -50,32 +54,34 @@ class HomePageState extends State<HomePage> {
     );
   }
 
+  // ── GREETING SECTION ──────────────────────────────────────────────────────
   Widget _buildGreetingSection() {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(24, 16, 24, 8),
+      padding: const EdgeInsets.fromLTRB(20, 14, 20, 6),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Row(
             children: [
               Container(
-                width: 44,
-                height: 44,
+                width: 42,
+                height: 42,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   color: Colors.white,
-                  border: Border.all(color: const Color(0xFF69F6B8), width: 2),
+                  border: Border.all(color: const Color(0xFF5DEAAB), width: 2),
                 ),
-                child: const Icon(Icons.person, color: Colors.grey, size: 24),
+                child: const Icon(Icons.person,
+                    color: Color(0xFFB0C8BF), size: 22),
               ),
-              const SizedBox(width: 12),
+              const SizedBox(width: 10),
               const Text(
                 "LEKSIKA",
                 style: TextStyle(
-                  color: Color(0xFF00362A),
+                  color: Color(0xFF003D2A),
                   fontSize: 22,
-                  fontWeight: FontWeight.bold,
-                  letterSpacing: 0.5,
+                  fontWeight: FontWeight.w900,
+                  letterSpacing: 1.2,
                 ),
               ),
             ],
@@ -88,7 +94,7 @@ class HomePageState extends State<HomePage> {
               shape: BoxShape.circle,
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.06),
+                  color: Colors.black.withOpacity(0.07),
                   blurRadius: 8,
                   offset: const Offset(0, 2),
                 ),
@@ -102,15 +108,16 @@ class HomePageState extends State<HomePage> {
     );
   }
 
+  // ── MAIN BANNER ───────────────────────────────────────────────────────────
   Widget _buildMainBanner() {
     return Container(
       width: double.infinity,
-      margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-      padding: const EdgeInsets.all(22),
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      padding: const EdgeInsets.fromLTRB(22, 22, 22, 22),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(24),
+        borderRadius: BorderRadius.circular(22),
         gradient: const LinearGradient(
-          colors: [Color(0xFF006947), Color(0xFF00A36C)],
+          colors: [Color(0xFF006947), Color(0xFF00A86B)],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
@@ -121,31 +128,37 @@ class HomePageState extends State<HomePage> {
           const Text(
             "SELAMAT DATANG KEMBALI,",
             style: TextStyle(
-                color: Colors.white70, fontSize: 11, letterSpacing: 0.8),
+              color: Colors.white70,
+              fontSize: 11,
+              fontWeight: FontWeight.w600,
+              letterSpacing: 0.8,
+            ),
           ),
-          const SizedBox(height: 4),
+          const SizedBox(height: 2),
           const Text(
             "Juli",
             style: TextStyle(
               color: Colors.white,
-              fontSize: 28,
+              fontSize: 30,
               fontWeight: FontWeight.bold,
+              height: 1.2,
             ),
           ),
-          const SizedBox(height: 18),
+          const SizedBox(height: 16),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.15),
+              color: Colors.white.withOpacity(0.18),
               borderRadius: BorderRadius.circular(14),
             ),
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
                 Container(
-                  padding: const EdgeInsets.all(8),
+                  width: 36,
+                  height: 36,
                   decoration: BoxDecoration(
-                    color: const Color(0xFFF8A010),
+                    color: const Color(0xFFF5A623),
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: const Icon(Icons.local_fire_department,
@@ -183,28 +196,33 @@ class HomePageState extends State<HomePage> {
     );
   }
 
+  // ── HISTORY HEADER ────────────────────────────────────────────────────────
   Widget _buildHistoryHeader() {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(20, 20, 12, 4),
+      padding: const EdgeInsets.fromLTRB(20, 18, 8, 4),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           const Text(
             "Riwayat Rangkuman",
             style: TextStyle(
-              color: Color(0xFF00362A),
-              fontSize: 20,
+              color: Color(0xFF003D2A),
+              fontSize: 19,
               fontWeight: FontWeight.bold,
             ),
           ),
           TextButton(
             onPressed: () => Navigator.pushNamed(context, '/riwayat'),
+            style: TextButton.styleFrom(
+              padding: const EdgeInsets.symmetric(horizontal: 8),
+              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+            ),
             child: const Text(
               "Lihat semua →",
               style: TextStyle(
                 color: Color(0xFF006947),
                 fontSize: 13,
-                fontWeight: FontWeight.bold,
+                fontWeight: FontWeight.w600,
               ),
             ),
           ),
@@ -213,6 +231,7 @@ class HomePageState extends State<HomePage> {
     );
   }
 
+  // ── HISTORY CARD ──────────────────────────────────────────────────────────
   Widget _buildHistoryCard(
     String title,
     String desc,
@@ -223,7 +242,7 @@ class HomePageState extends State<HomePage> {
     return GestureDetector(
       onTap: () => Navigator.pushNamed(context, '/detail'),
       child: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
         padding: const EdgeInsets.all(18),
         decoration: BoxDecoration(
           color: Colors.white,
@@ -239,7 +258,6 @@ class HomePageState extends State<HomePage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Top row: icon + badge
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -253,10 +271,10 @@ class HomePageState extends State<HomePage> {
                       size: 18, color: const Color(0xFF006947)),
                 ),
                 Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 12, vertical: 5),
                   decoration: BoxDecoration(
-                    color: const Color(0xFF69F6B8),
+                    color: const Color(0xFF6AEFB8),
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: const Text(
@@ -271,20 +289,16 @@ class HomePageState extends State<HomePage> {
                 ),
               ],
             ),
-
             const SizedBox(height: 12),
-
             Text(
               title,
               style: const TextStyle(
-                color: Color(0xFF00362A),
-                fontSize: 17,
+                color: Color(0xFF003D2A),
+                fontSize: 16,
                 fontWeight: FontWeight.bold,
               ),
             ),
-
             const SizedBox(height: 6),
-
             Text(
               desc,
               style: const TextStyle(
@@ -293,12 +307,10 @@ class HomePageState extends State<HomePage> {
                 height: 1.5,
               ),
             ),
-
             const Padding(
               padding: EdgeInsets.symmetric(vertical: 12),
               child: Divider(height: 1, color: Color(0xFFDDEDE8)),
             ),
-
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -330,18 +342,19 @@ class HomePageState extends State<HomePage> {
     );
   }
 
+  // ── DAILY TARGET ──────────────────────────────────────────────────────────
   Widget _buildDailyTarget() {
     return Container(
       width: double.infinity,
-      margin: const EdgeInsets.fromLTRB(20, 8, 20, 0),
+      margin: const EdgeInsets.fromLTRB(16, 10, 16, 0),
       decoration: BoxDecoration(
         color: const Color(0xFFDFF5EC),
-        borderRadius: BorderRadius.circular(24),
+        borderRadius: BorderRadius.circular(22),
       ),
       child: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.fromLTRB(24, 28, 24, 20),
+            padding: const EdgeInsets.fromLTRB(24, 26, 24, 20),
             child: Column(
               children: [
                 const Text(
@@ -356,7 +369,11 @@ class HomePageState extends State<HomePage> {
                 const Text(
                   "Kamu hampir mencapai target belajar harianmu! Buat rangkuman lagi untuk mempertahankan streak.",
                   textAlign: TextAlign.center,
-                  style: TextStyle(color: Color(0xFF2F6555), fontSize: 13, height: 1.5),
+                  style: TextStyle(
+                    color: Color(0xFF2F6555),
+                    fontSize: 13,
+                    height: 1.5,
+                  ),
                 ),
                 const SizedBox(height: 20),
                 ElevatedButton.icon(
@@ -365,14 +382,13 @@ class HomePageState extends State<HomePage> {
                   icon: const Icon(Icons.arrow_forward, size: 16),
                   label: const Text(
                     "Lanjut Belajar",
-                    style:
-                        TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
                   ),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF006947),
                     foregroundColor: Colors.white,
                     padding: const EdgeInsets.symmetric(
-                        horizontal: 28, vertical: 14),
+                        horizontal: 30, vertical: 14),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(30),
                     ),
@@ -382,28 +398,28 @@ class HomePageState extends State<HomePage> {
               ],
             ),
           ),
-
-          // Illustration bottom
           ClipRRect(
             borderRadius: const BorderRadius.only(
-              bottomLeft: Radius.circular(24),
-              bottomRight: Radius.circular(24),
+              bottomLeft: Radius.circular(22),
+              bottomRight: Radius.circular(22),
             ),
-            child: Container(
+            child: SizedBox(
               height: 110,
               width: double.infinity,
-              decoration: const BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [Color(0xFF006947), Color(0xFF004D35)],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
-              ),
               child: Stack(
                 children: [
+                  Container(
+                    decoration: const BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [Color(0xFF006947), Color(0xFF004530)],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      ),
+                    ),
+                  ),
                   Positioned(
-                    bottom: -20,
-                    left: -20,
+                    bottom: -22,
+                    left: -22,
                     child: Container(
                       width: 110,
                       height: 110,
@@ -415,13 +431,13 @@ class HomePageState extends State<HomePage> {
                   ),
                   Positioned(
                     top: -30,
-                    right: 40,
+                    right: 50,
                     child: Container(
-                      width: 90,
-                      height: 90,
+                      width: 88,
+                      height: 88,
                       decoration: const BoxDecoration(
                         shape: BoxShape.circle,
-                        color: Color(0x1500362A),
+                        color: Color(0x14000000),
                       ),
                     ),
                   ),
@@ -437,8 +453,8 @@ class HomePageState extends State<HomePage> {
                   const Center(
                     child: Icon(
                       Icons.menu_book_rounded,
-                      color: Colors.white24,
-                      size: 56,
+                      color: Color(0x33FFFFFF),
+                      size: 54,
                     ),
                   ),
                 ],
@@ -449,70 +465,9 @@ class HomePageState extends State<HomePage> {
       ),
     );
   }
-
-  Widget _buildBottomNavbar() {
-    return BottomAppBar(
-      shape: const CircularNotchedRectangle(),
-      notchMargin: 8,
-      color: Colors.white,
-      elevation: 8,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Row(
-            children: [
-              _navItem(Icons.home_outlined, "BERANDA", true, '/home'),
-              _navItem(Icons.history, "RIWAYAT", false, '/riwayat'),
-            ],
-          ),
-          Row(
-            children: [
-              _navItem(Icons.style_outlined, "FLASHCARD", false, '/home'),
-              _navItem(Icons.settings_outlined, "SETELAN", false, '/home'),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _navItem(IconData icon, String label, bool isActive, String route) {
-    return InkWell(
-      onTap: () => Navigator.pushNamed(context, route),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 15),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            isActive
-                ? Container(
-                    padding: const EdgeInsets.all(6),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFB7EDD9),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Icon(icon,
-                        color: const Color(0xFF064E3B), size: 20),
-                  )
-                : Icon(icon, color: const Color(0xFF059669), size: 22),
-            const SizedBox(height: 2),
-            Text(
-              label,
-              style: TextStyle(
-                fontSize: 10,
-                fontWeight: FontWeight.bold,
-                color: isActive
-                    ? const Color(0xFF064E3B)
-                    : const Color(0xFF059669),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
 }
 
+// ── CUSTOM PAINTER ────────────────────────────────────────────────────────────
 class _LandscapePainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
@@ -523,20 +478,20 @@ class _LandscapePainter extends CustomPainter {
       ..moveTo(0, size.height * 0.6)
       ..quadraticBezierTo(size.width * 0.3, size.height * 0.1,
           size.width * 0.6, size.height * 0.5)
-      ..quadraticBezierTo(size.width * 0.8, size.height * 0.7,
-          size.width, size.height * 0.4)
+      ..quadraticBezierTo(
+          size.width * 0.8, size.height * 0.7, size.width, size.height * 0.4)
       ..lineTo(size.width, size.height)
       ..lineTo(0, size.height)
       ..close();
     canvas.drawPath(backPath, paint);
 
-    paint.color = const Color(0xFF004030);
+    paint.color = const Color(0xFF003D28);
     final frontPath = Path()
-      ..moveTo(0, size.height * 0.8)
-      ..quadraticBezierTo(size.width * 0.25, size.height * 0.4,
+      ..moveTo(0, size.height * 0.82)
+      ..quadraticBezierTo(size.width * 0.25, size.height * 0.42,
           size.width * 0.5, size.height * 0.7)
-      ..quadraticBezierTo(size.width * 0.75, size.height * 0.9,
-          size.width, size.height * 0.6)
+      ..quadraticBezierTo(
+          size.width * 0.75, size.height * 0.9, size.width, size.height * 0.62)
       ..lineTo(size.width, size.height)
       ..lineTo(0, size.height)
       ..close();
