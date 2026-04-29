@@ -1,0 +1,104 @@
+import 'package:flutter/material.dart';
+
+class BottomNavbar extends StatelessWidget {
+  const BottomNavbar({super.key, required this.activeIndex});
+
+  final int activeIndex;
+
+  void _smoothPush(BuildContext context, String route) {
+    Navigator.of(context).pushNamed(route);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return BottomAppBar(
+      shape: const CircularNotchedRectangle(),
+      notchMargin: 8,
+      color: Colors.white,
+      elevation: 10,
+      child: SizedBox(
+        height: 60,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Row(
+              children: [
+                _navItem(context, Icons.home_rounded, 'BERANDA', activeIndex == 0,
+                    '/home'),
+                _navItem(
+                  context,
+                  Icons.description_outlined,
+                  'RIWAYAT',
+                  activeIndex == 1,
+                  '/riwayat',
+                ),
+              ],
+            ),
+            Row(
+              children: [
+                _navItem(context, Icons.style_outlined, 'FLASHCARD',
+                    activeIndex == 2, '/flashcard'),
+                _navItem(context, Icons.person_outline_rounded, 'PROFIL',
+                    activeIndex == 3, '/profil'),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _navItem(
+    BuildContext context,
+    IconData icon,
+    String label,
+    bool isActive,
+    String route,
+  ) {
+    return InkWell(
+      onTap: () {
+        if (!isActive) _smoothPush(context, route);
+      },
+      borderRadius: BorderRadius.circular(12),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        curve: Curves.easeInOut,
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 4),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            AnimatedContainer(
+              duration: const Duration(milliseconds: 200),
+              curve: Curves.easeInOut,
+              padding:
+                  isActive ? const EdgeInsets.all(6) : const EdgeInsets.all(0),
+              decoration: BoxDecoration(
+                color:
+                    isActive ? const Color(0xFFB7EDD9) : Colors.transparent,
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Icon(
+                icon,
+                color: isActive
+                    ? const Color(0xFF064E3B)
+                    : const Color(0xFF059669),
+                size: isActive ? 20 : 22,
+              ),
+            ),
+            const SizedBox(height: 2),
+            Text(
+              label,
+              style: TextStyle(
+                fontSize: 9,
+                fontWeight: FontWeight.bold,
+                color: isActive
+                    ? const Color(0xFF064E3B)
+                    : const Color(0xFF059669),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}

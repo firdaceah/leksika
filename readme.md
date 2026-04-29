@@ -91,3 +91,9 @@ Fitur yang dipakai saat ini adalah **upload PDF lalu ekstrak teks** melalui endp
 1. Selalu lakukan `git pull origin main` sebelum mulai bekerja.
 2. Buat branch baru: `git checkout -b fitur/nama-fitur`
 3. Setelah selesai: `git add .` -> `git commit -m "pesan"` -> `git push origin fitur/nama-fitur`
+
+
+features/
+├── auth/         ← semua yang berkaitan dengan user & auth
+├── document/     ← upload, riwasama: Document
+└── summary/      ← hasil rangkuman & quiz (data sama: Summary)
