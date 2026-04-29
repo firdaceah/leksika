@@ -17,7 +17,7 @@ class DocumentController extends Controller
         $user = $request->user();
 
         $history = Document::where('user_id', $user->id)
-            ->with('summary') 
+            ->with('summary')
             ->latest()
             ->get();
 
@@ -88,5 +88,27 @@ class DocumentController extends Controller
                 'document' => $document,
             ], 500);
         }
+    }
+
+    public function show(Request $request, $id)
+    {
+        $user = $request->user();
+
+        $document = Document::where('user_id', $user->id)
+            ->with('summary') 
+            ->find($id);
+
+        if (!$document) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Dokumen tidak ditemukan atau Anda tidak memiliki akses.'
+            ], 404);
+        }
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Detail dokumen berhasil diambil.',
+            'data' => $document
+        ]);
     }
 }
