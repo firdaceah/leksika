@@ -64,7 +64,7 @@ class SummaryService
   public function getGroqSummary($text, $length, $makeQuiz = false, $quizCount = "5 Soal")
   {
     $cleanText = mb_strimwidth($text, 0, 20000, "...");
-    
+
     $apiKey = env('GROQ_API_KEY');
     $url = "https://api.groq.com/openai/v1/chat/completions";
 
@@ -72,12 +72,15 @@ class SummaryService
 
     $systemInstructions = "Anda adalah asisten akademik Leksika yang ahli merangkum materi kuliah dalam Bahasa Indonesia.\n\n" .
       "TUGAS ANDA:\n" .
-      "1. Buat rangkuman materi dengan panjang: $length.\n" .
-      "2. Gunakan format Markdown yang rapi (bullet points, bold, headers).\n";
+      "1. Gunakan # untuk Judul Utama (hanya satu kali di awal).\n" .
+      "2. Gunakan ### untuk Sub-judul setiap bagian.\n" .
+      "3. Gunakan bullet points (-) untuk penjelasan.\n" .
+      "4. Gunakan **teks** untuk istilah penting yang perlu ditebalkan.\n" .
+      "5. Panjang rangkuman: $length.\n";
 
     if ($makeQuiz) {
-      $systemInstructions .= "3. Tambahkan bagian 'LATIHAN FLASHCARD' di akhir rangkuman sebanyak $quizCount.\n" .
-        "4. Setiap soal flashcard harus memiliki Pertanyaan dan Jawaban yang jelas.\n";
+      $systemInstructions .= "6. Jika ada flashcard, buat di akhir dengan header ### LATIHAN FLASHCARD sebanyak $quizCount.\n" .
+        "7. Setiap soal flashcard harus memiliki Pertanyaan dan Jawaban yang jelas.\n";
     }
 
     $systemInstructions .= "\nJangan berikan kata pengantar, langsung berikan konten rangkumannya.";

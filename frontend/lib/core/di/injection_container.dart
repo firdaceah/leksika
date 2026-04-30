@@ -11,6 +11,7 @@ import 'package:leksika/features/auth/domain/usecases/login_usecase.dart';
 import 'package:leksika/features/auth/domain/usecases/register_usecase.dart';
 import 'package:leksika/features/auth/domain/usecases/resend_otp_usecase.dart';
 import 'package:leksika/features/auth/domain/usecases/verify_otp_usecase.dart';
+import 'package:leksika/features/auth/domain/usecases/logout_usecase.dart';
 import 'package:leksika/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:leksika/features/summary/data/datasources/summary_remote_datasource.dart';
 import 'package:leksika/features/summary/data/repositories/summary_repository_impl.dart';
@@ -55,13 +56,20 @@ Future<void> init() async {
     ..registerLazySingleton<ResendOtpUsecase>(
       () => ResendOtpUsecase(sl<AuthRepository>()),
     )
+    ..registerLazySingleton<GetUserUsecase>(
+      () => GetUserUsecase(sl<AuthRepository>()),
+    )
+    ..registerLazySingleton<LogoutUsecase>(
+      () => LogoutUsecase(sl<AuthRepository>()),
+    )
     ..registerFactory<AuthBloc>(
       () => AuthBloc(
         loginUsecase: sl<LoginUsecase>(),
         registerUsecase: sl<RegisterUsecase>(),
         verifyOtpUsecase: sl<VerifyOtpUsecase>(),
         resendOtpUsecase: sl<ResendOtpUsecase>(),
-        getUserUsecase: sl<GetUserUsecase>()
+        getUserUsecase: sl<GetUserUsecase>(),
+        logoutUsecase: sl<LogoutUsecase>(),
       ),
     );
 
@@ -88,4 +96,6 @@ Future<void> init() async {
         uploadDocumentUsecase: sl<UploadDocumentUsecase>(),
       ),
     );
+
+  
 }

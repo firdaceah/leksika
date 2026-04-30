@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 
 class SummaryDetailScreen extends StatelessWidget {
   const SummaryDetailScreen({
@@ -25,20 +26,28 @@ class SummaryDetailScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(title,
-                      style: const TextStyle(
-                          fontSize: 28,
-                          fontWeight: FontWeight.bold,
-                          color: Color(0xFF00362A))),
+                  Text(
+                    title,
+                    style: const TextStyle(
+                      fontSize: 28,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF00362A),
+                    ),
+                  ),
                   const SizedBox(height: 8),
-                  Text('Dibuat dari $pageCount',
-                      style: const TextStyle(
-                          fontSize: 16, color: Color(0xFF2F6555))),
+                  Text(
+                    'Dibuat dari $pageCount',
+                    style: const TextStyle(
+                      fontSize: 16,
+                      color: Color(0xFF2F6555),
+                    ),
+                  ),
                   const SizedBox(height: 24),
-                  ...contents
-                      .map((data) => _buildContentCard(
-                          data['subTitle'] ?? '', data['body'] ?? ''))
-                      .toList(),
+                  // Menampilkan daftar kartu konten
+                  ...contents.map((data) => _buildContentCard(
+                        data['subTitle'] ?? '',
+                        data['body'] ?? '',
+                      )),
                 ],
               ),
             ),
@@ -55,18 +64,27 @@ class SummaryDetailScreen extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           IconButton(
-            icon: const Icon(Icons.arrow_back_ios_new,
-                color: Color(0xFF00362A)),
+            icon: const Icon(
+              Icons.arrow_back_ios_new,
+              color: Color(0xFF00362A),
+            ),
             onPressed: () => Navigator.pop(context),
           ),
-          const Text('Rangkuman',
-              style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xFF00362A))),
+          const Text(
+            'Rangkuman',
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: Color(0xFF00362A),
+            ),
+          ),
           const CircleAvatar(
             backgroundColor: Color(0xFF006947),
-            child: Icon(Icons.notifications_none, color: Colors.white, size: 20),
+            child: Icon(
+              Icons.notifications_none,
+              color: Colors.white,
+              size: 20,
+            ),
           ),
         ],
       ),
@@ -86,15 +104,35 @@ class SummaryDetailScreen extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(subTitle,
-              style: const TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xFF00362A))),
+          Text(
+            subTitle,
+            style: const TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: Color(0xFF00362A),
+            ),
+          ),
           const Divider(color: Color(0xFFB7EDD9), height: 24),
-          Text(body,
-              style: const TextStyle(
-                  fontSize: 15, color: Color(0xFF2F6555), height: 1.6)),
+          MarkdownBody(
+            data: body,
+            selectable: true, 
+            styleSheet: MarkdownStyleSheet(
+              p: const TextStyle(
+                fontSize: 15,
+                color: Color(0xFF2F6555),
+                height: 1.6,
+              ),
+              strong: const TextStyle(
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF00362A),
+              ),
+              listBullet: const TextStyle(
+                color: Color(0xFF006947),
+                fontSize: 15,
+              ),
+              blockSpacing: 12,
+            ),
+          ),
         ],
       ),
     );

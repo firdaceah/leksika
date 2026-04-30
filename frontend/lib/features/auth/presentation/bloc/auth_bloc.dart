@@ -7,6 +7,7 @@ import 'package:leksika/features/auth/domain/usecases/resend_otp_usecase.dart';
 import 'package:leksika/features/auth/domain/usecases/verify_otp_usecase.dart';
 import 'package:leksika/features/auth/presentation/bloc/auth_event.dart';
 import 'package:leksika/features/auth/presentation/bloc/auth_state.dart';
+import 'package:leksika/features/auth/domain/usecases/logout_usecase.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   AuthBloc({
@@ -15,12 +16,14 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     required this.verifyOtpUsecase,
     required this.resendOtpUsecase,
     required this.getUserUsecase,
+    required this.logoutUsecase,
   }) : super(const AuthInitial()) {
     on<LoginRequested>(_onLoginRequested);
     on<RegisterRequested>(_onRegisterRequested);
     on<VerifyOtpRequested>(_onVerifyOtpRequested);
     on<ResendOtpRequested>(_onResendOtpRequested);
     on<FetchUserRequested>(_onFetchUser);
+    on<LogoutRequested>(_onLogoutRequested);
   }
 
   final LoginUsecase loginUsecase;
@@ -28,6 +31,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final VerifyOtpUsecase verifyOtpUsecase;
   final ResendOtpUsecase resendOtpUsecase;
   final GetUserUsecase getUserUsecase;
+  final LogoutUsecase logoutUsecase;
 
   Future<void> _onLoginRequested(
     LoginRequested event,
@@ -97,7 +101,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   AuthState _mapFailureToState(Failure failure) {
     print('>>> Failure type: ${failure.runtimeType}');
     print('>>> Failure message: ${failure.message}');
-    
+
     if (failure is EmailNotVerifiedFailure) {
       return const AuthEmailNotVerified('Email belum diverifikasi');
     }
@@ -111,6 +115,25 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     FetchUserRequested event,
     Emitter<AuthState> emit,
   ) async {
+    if (state is Authenticated) return;
 
+    final result = await getUserUsecase();
+
+    result.fold(
+      (failure) => emit(AuthFailure(failure.message)),
+      (user) => emit(Authenticated(user)),
+    );
+  }
+
+  Future<void> _onLogoutRequested(
+    LogoutRequested event,
+    Emitter<AuthState> emit,
+  ) async {
+    emit(const AuthLoading());
+    final result = await logoutUsecase(); 
+    result.fold(
+      (failure) => emit(AuthFailure(failure.message)),
+      (_) => emit(const AuthInitial()), 
+    );
   }
 }

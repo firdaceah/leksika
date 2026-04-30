@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart';
+import 'package:flutter/foundation.dart';
 import 'package:leksika/core/errors/exceptions.dart';
 import 'package:leksika/core/errors/failures.dart';
 import 'package:leksika/core/storage/secure_storage.dart';
@@ -60,9 +61,7 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future<Either<Failure, void>> verifyOtp({
-    required String otp,
-  }) async {
+  Future<Either<Failure, void>> verifyOtp({required String otp}) async {
     try {
       await remoteDataSource.verifyOtp(otp: otp);
       return const Right(unit);
@@ -101,6 +100,24 @@ class AuthRepositoryImpl implements AuthRepository {
       return Left(UnauthorizedFailure());
     } on ServerException catch (e) {
       return Left(ServerFailure(e.message));
+    }
+  }
+
+ @override
+  Future<Either<Failure, void>> logout() async {
+    try {
+      try {
+        await remoteDataSource.logout();
+      } catch (e) {
+        debugPrint("Remote logout failed, proceeding with local clear.");
+      }
+      
+      await secureStorage.clearToken(); 
+      
+      return const Right(unit); 
+    } catch (e) {
+      await secureStorage.clearToken();
+      return const Right(unit);
     }
   }
 }

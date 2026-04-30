@@ -55,3 +55,7 @@ class ResendOtpRequested extends AuthEvent {
 class FetchUserRequested extends AuthEvent {
   const FetchUserRequested();
 }
+
+class LogoutRequested extends AuthEvent {
+  const LogoutRequested();
+}

@@ -22,4 +22,6 @@ abstract class AuthRepository {
   Future<Either<Failure, void>> resendOtp();
 
   Future<Either<Failure, UserEntity>> getUser();
+
+  Future<Either<Failure, void>> logout();
 }

@@ -10,7 +10,8 @@ class UserModel extends UserEntity {
   });
 
   factory UserModel.fromAuthResponse(Map<String, dynamic> json) {
-    final userJson = json['user'] as Map<String, dynamic>? ?? <String, dynamic>{};
+    final userJson =
+        json['user'] as Map<String, dynamic>? ?? <String, dynamic>{};
     return UserModel(
       id: (userJson['id'] as num?)?.toInt() ?? 0,
       name: (userJson['name'] as String?) ?? '',
@@ -21,11 +22,15 @@ class UserModel extends UserEntity {
   }
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
+    final data = json['data'] != null
+        ? json['data'] as Map<String, dynamic>
+        : json;
     return UserModel(
-      id: (json['id'] as num?)?.toInt() ?? 0,
-      name: (json['name'] as String?) ?? '',
-      email: (json['email'] as String?) ?? '',
-      emailVerifiedAt: _parseDate(json['email_verified_at']),
+      id: (data['id'] as num?)?.toInt() ?? 0,
+      name:
+          (data['name'] as String?) ?? 'User', // Kasih default 'User' jika null
+      email: (data['email'] as String?) ?? '',
+      emailVerifiedAt: _parseDate(data['email_verified_at']),
     );
   }
 
