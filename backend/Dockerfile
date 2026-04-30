@@ -35,4 +35,4 @@ RUN chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache
 
 EXPOSE 80
 
-CMD php artisan config:cache && php artisan route:cache && php-fpm -D && nginx -g "daemon off;"
+CMD php artisan migrate --force && php artisan config:cache && php artisan route:cache && php-fpm -D && nginx -g "daemon off;"
