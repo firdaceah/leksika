@@ -34,7 +34,7 @@ class RiwayatScreenState extends State<RiwayatScreen> {
         bottomNavigationBar: const BottomNavbar(activeIndex: 1),
         body: Column(
           children: [
-            _buildAppBar(context),
+            _buildHeader(context),
             Expanded(
               child: RefreshIndicator(
                 color: const Color(0xFF006947),
@@ -112,8 +112,9 @@ class RiwayatScreenState extends State<RiwayatScreen> {
     );
   }
 
-  Widget _buildAppBar(BuildContext context) {
+  Widget _buildHeader(BuildContext context) {
     return Container(
+      width: double.infinity,
       decoration: const BoxDecoration(
         color: Color(0xFF006947),
         borderRadius: BorderRadius.only(
@@ -128,30 +129,20 @@ class RiwayatScreenState extends State<RiwayatScreen> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Container(
-                width: 38,
-                height: 38,
-                margin: const EdgeInsets.only(left: 12),
-                decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.2),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: IconButton(
-                  icon: const Icon(Icons.arrow_back_ios_new_rounded,
-                      color: Colors.white, size: 18),
-                  padding: EdgeInsets.zero,
-                  onPressed: () => Navigator.pop(context),
-                ),
+              IconButton(
+                icon: const Icon(Icons.arrow_back_ios, color: Colors.white, size: 20),
+                onPressed: () => Navigator.pop(context),
               ),
               const Text(
                 'Riwayat Rangkuman',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
               ),
-              const SizedBox(width: 50), 
+              Container(
+                width: 38,
+                height: 38,
+                decoration: const BoxDecoration(color: Colors.white, shape: BoxShape.circle),
+                child: const Icon(Icons.notifications_none_outlined, color: Color(0xFF006947), size: 20),
+              ),
             ],
           ),
         ),

@@ -22,7 +22,7 @@ class _SplashScreenState extends State<SplashScreen> {
         });
       }
 
-      Timer(const Duration(seconds: 10), () {
+      Timer(const Duration(seconds: 5), () {
         if (mounted) {
           Navigator.pushReplacementNamed(context, '/onboarding');
         }

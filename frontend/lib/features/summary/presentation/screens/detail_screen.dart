@@ -19,7 +19,7 @@ class SummaryDetailScreen extends StatelessWidget {
       backgroundColor: const Color(0xFFDFF5EC),
       body: Column(
         children: [
-          _buildAppBar(context),
+          _buildHeader(context),
           Expanded(
             child: SingleChildScrollView(
               padding: const EdgeInsets.all(20),
@@ -57,36 +57,40 @@ class SummaryDetailScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildAppBar(BuildContext context) {
+ Widget _buildHeader(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.only(top: 50, bottom: 20, left: 10, right: 20),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          IconButton(
-            icon: const Icon(
-              Icons.arrow_back_ios_new,
-              color: Color(0xFF00362A),
-            ),
-            onPressed: () => Navigator.pop(context),
+      width: double.infinity,
+      decoration: const BoxDecoration(
+        color: Color(0xFF006947),
+        borderRadius: BorderRadius.only(
+          bottomLeft: Radius.circular(24),
+          bottomRight: Radius.circular(24),
+        ),
+      ),
+      child: SafeArea(
+        bottom: false,
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(4, 8, 16, 16),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              IconButton(
+                icon: const Icon(Icons.arrow_back_ios, color: Colors.white, size: 20),
+                onPressed: () => Navigator.pop(context),
+              ),
+              const Text(
+                'Rangkuman',
+                style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+              Container(
+                width: 38,
+                height: 38,
+                decoration: const BoxDecoration(color: Colors.white, shape: BoxShape.circle),
+                child: const Icon(Icons.notifications_none_outlined, color: Color(0xFF006947), size: 20),
+              ),
+            ],
           ),
-          const Text(
-            'Rangkuman',
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-              color: Color(0xFF00362A),
-            ),
-          ),
-          const CircleAvatar(
-            backgroundColor: Color(0xFF006947),
-            child: Icon(
-              Icons.notifications_none,
-              color: Colors.white,
-              size: 20,
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }
