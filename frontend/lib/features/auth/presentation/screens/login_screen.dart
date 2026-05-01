@@ -38,9 +38,7 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Future<void> _googleSignIn() async {
-    print('>>> Google Sign In tapped');
     final idToken = await GoogleAuthService.getIdToken();
-    print('>>> idToken: $idToken');
     if (idToken == null) return;
     if (!mounted) return;
     context.read<AuthBloc>().add(GoogleLoginRequested(idToken));
