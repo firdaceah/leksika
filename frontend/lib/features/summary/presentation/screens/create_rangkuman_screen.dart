@@ -7,6 +7,7 @@ import 'package:leksika/core/di/injection_container.dart';
 import 'package:leksika/features/summary/presentation/bloc/summary_bloc.dart';
 import 'package:leksika/features/summary/presentation/bloc/summary_event.dart';
 import 'package:leksika/features/summary/presentation/bloc/summary_state.dart';
+import 'package:leksika/features/summary/presentation/widgets/rangkuman_loading_overlay.dart';
 
 class CreateRangkumanScreen extends StatefulWidget {
   const CreateRangkumanScreen({super.key});
@@ -19,6 +20,7 @@ class CreateRangkumanScreenState extends State<CreateRangkumanScreen> {
   String _selectedSoal = '10 Soal';
   bool _buatFlashcard = true;
   File? _selectedFile;
+  bool _isLoadingVisible = false;
 
   final List<String> _panjangOptions = [
     'Singkat (3-4 Paragraf)',
@@ -51,14 +53,20 @@ class CreateRangkumanScreenState extends State<CreateRangkumanScreen> {
       create: (_) => sl<SummaryBloc>(),
       child: BlocListener<SummaryBloc, SummaryState>(
         listener: (context, state) {
-          if (state is SummaryDetailLoaded) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('Berhasil membuat rangkuman!'),
-                backgroundColor: Color(0xFF006947),
+          if (state is SummaryLoading && !_isLoadingVisible) {
+            _isLoadingVisible = true;
+            Navigator.push(
+              context,
+              PageRouteBuilder(
+                opaque: false,
+                pageBuilder: (_, __, ___) => const RangkumanLoadingOverlay(),
               ),
             );
-            
+          } else if (state is SummaryDetailLoaded) {
+            if (_isLoadingVisible) {
+              _isLoadingVisible = false;
+              Navigator.pop(context);
+            }
             Navigator.pushReplacementNamed(
               context,
               '/detail',
@@ -71,6 +79,10 @@ class CreateRangkumanScreenState extends State<CreateRangkumanScreen> {
               },
             );
           } else if (state is SummaryFailure) {
+            if (_isLoadingVisible) {
+              _isLoadingVisible = false;
+              Navigator.pop(context);
+            }
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Row(
@@ -116,10 +128,16 @@ class CreateRangkumanScreenState extends State<CreateRangkumanScreen> {
                       _buildDropdownLabel('JUMLAH SOAL KUIS'),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 20),
-                        child: _buildDropdown(
-                          value: _selectedSoal,
-                          items: _soalOptions,
-                          onChanged: (val) => setState(() => _selectedSoal = val!),
+                        child: Opacity(
+                          opacity: _buatFlashcard ? 1.0 : 0.4,
+                          child: IgnorePointer(
+                            ignoring: !_buatFlashcard,
+                            child: _buildDropdown(
+                              value: _selectedSoal,
+                              items: _soalOptions,
+                              onChanged: (val) => setState(() => _selectedSoal = val!),
+                            ),
+                          ),
                         ),
                       ),
                       const SizedBox(height: 32),
@@ -311,12 +329,7 @@ class CreateRangkumanScreenState extends State<CreateRangkumanScreen> {
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(9999)),
               elevation: 6,
             ),
-            child: isLoading
-                ? const SizedBox(
-                    width: 24, height: 24,
-                    child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
-                  )
-                : const Text('Buat Rangkuman Sekarang', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+            child: const Text('Buat Rangkuman Sekarang', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
           ),
         );
       },

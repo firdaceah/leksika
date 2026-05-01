@@ -71,168 +71,177 @@ class _RegisterScreenState extends State<RegisterScreen> {
         final isLoading = state is AuthLoading;
         return Scaffold(
           backgroundColor: Colors.white,
-          body: SingleChildScrollView(
-            child: Form(
-              key: _formKey,
-              child: Column(
-                children: [
-                  Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.only(
-                        top: 80, bottom: 40, left: 30, right: 30),
-                    decoration: const BoxDecoration(
-                      color: Color(0xFFD1E7E0),
-                      borderRadius: BorderRadius.only(
-                        bottomLeft: Radius.circular(50),
-                        bottomRight: Radius.circular(50),
+          body: AbsorbPointer(
+            absorbing: isLoading,
+            child: SingleChildScrollView(
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  children: [
+                    Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.only(
+                          top: 80, bottom: 40, left: 30, right: 30),
+                      decoration: const BoxDecoration(
+                        color: Color(0xFFD1E7E0),
+                        borderRadius: BorderRadius.only(
+                          bottomLeft: Radius.circular(50),
+                          bottomRight: Radius.circular(50),
+                        ),
+                      ),
+                      child: const Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'CREATE YOUR\nACCOUNT',
+                            style: TextStyle(
+                              fontSize: 32,
+                              fontWeight: FontWeight.w900,
+                              color: Color(0xFF006947),
+                              height: 1.1,
+                            ),
+                          ),
+                          SizedBox(height: 10),
+                          Text(
+                            'Become a Leksikans today and unlock your AI superpower',
+                            style: TextStyle(color: Color(0xFF4A8F83), fontSize: 14),
+                          ),
+                        ],
                       ),
                     ),
-                    child: const Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'CREATE YOUR\nACCOUNT',
-                          style: TextStyle(
-                            fontSize: 32,
-                            fontWeight: FontWeight.w900,
-                            color: Color(0xFF006947),
-                            height: 1.1,
+                    Padding(
+                      padding: const EdgeInsets.all(30),
+                      child: Column(
+                        children: [
+                          _buildInputField(
+                            label: 'Nama',
+                            icon: Icons.person_outline,
+                            hint: 'Nama lengkap',
+                            controller: _nameController,
+                            validator: (value) {
+                              if (value == null || value.trim().isEmpty) {
+                                return 'Nama wajib diisi';
+                              }
+                              return null;
+                            },
                           ),
-                        ),
-                        SizedBox(height: 10),
-                        Text(
-                          'Become a Leksikans today and unlock your AI superpower',
-                          style: TextStyle(color: Color(0xFF4A8F83), fontSize: 14),
-                        ),
-                      ],
+                          const SizedBox(height: 15),
+                          _buildInputField(
+                            label: 'Email',
+                            icon: Icons.email_outlined,
+                            hint: 'member@leksika.com',
+                            controller: _emailController,
+                            validator: (value) {
+                              if (value == null || value.trim().isEmpty) {
+                                return 'Email wajib diisi';
+                              }
+                              return null;
+                            },
+                          ),
+                          const SizedBox(height: 15),
+                          _buildInputField(
+                            label: 'Password',
+                            icon: Icons.lock_outline,
+                            hint: '••••••••',
+                            isPassword: true,
+                            isObscured: _obscurePassword,
+                            controller: _passwordController,
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Password wajib diisi';
+                              }
+                              return null;
+                            },
+                            onToggle: () {
+                              setState(() {
+                                _obscurePassword = !_obscurePassword;
+                              });
+                            },
+                          ),
+                          const SizedBox(height: 15),
+                          _buildInputField(
+                            label: 'Konfirmasi Password',
+                            icon: Icons.lock_clock_outlined,
+                            hint: '••••••••',
+                            isPassword: true,
+                            isObscured: _obscureConfirmPassword,
+                            controller: _passwordConfirmationController,
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Konfirmasi password wajib diisi';
+                              }
+                              if (value != _passwordController.text) {
+                                return 'Password tidak sama';
+                              }
+                              return null;
+                            },
+                            onToggle: () {
+                              setState(() {
+                                _obscureConfirmPassword = !_obscureConfirmPassword;
+                              });
+                            },
+                          ),
+                          const SizedBox(height: 15),
+                          Row(
+                            children: [
+                              Checkbox(
+                                value: _isAgree,
+                                onChanged: isLoading
+                                    ? null
+                                    : (v) => setState(() => _isAgree = v!),
+                                activeColor: const Color(0xFF006947),
+                              ),
+                              const Expanded(
+                                child: Text(
+                                  'I agree to the Terms of Service and Privacy Policy',
+                                  style: TextStyle(fontSize: 11),
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 30),
+                          SizedBox(
+                            width: double.infinity,
+                            height: 55,
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: const Color(0xFF006947),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(15),
+                                ),
+                              ),
+                              onPressed: _isAgree && !isLoading ? _submit : null,
+                              child: isLoading
+                                  ? const SizedBox(
+                                      width: 24,
+                                      height: 24,
+                                      child: CircularProgressIndicator(
+                                        color: Colors.white,
+                                        strokeWidth: 2,
+                                      ),
+                                    )
+                                  : const Text(
+                                      'BUAT AKUN →',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                            ),
+                          ),
+                          const SizedBox(height: 15),
+                          TextButton(
+                            onPressed: isLoading ? null : () => Navigator.pop(context),
+                            child: const Text(
+                              'Sudah punya akun? Log in',
+                              style: TextStyle(color: Color(0xFF006947)),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(30),
-                    child: Column(
-                      children: [
-                        _buildInputField(
-                          label: 'Nama',
-                          icon: Icons.person_outline,
-                          hint: 'Nama lengkap',
-                          controller: _nameController,
-                          validator: (value) {
-                            if (value == null || value.trim().isEmpty) {
-                              return 'Nama wajib diisi';
-                            }
-                            return null;
-                          },
-                        ),
-                        const SizedBox(height: 15),
-                        _buildInputField(
-                          label: 'Email',
-                          icon: Icons.email_outlined,
-                          hint: 'member@leksika.com',
-                          controller: _emailController,
-                          validator: (value) {
-                            if (value == null || value.trim().isEmpty) {
-                              return 'Email wajib diisi';
-                            }
-                            return null;
-                          },
-                        ),
-                        const SizedBox(height: 15),
-                        _buildInputField(
-                          label: 'Password',
-                          icon: Icons.lock_outline,
-                          hint: '••••••••',
-                          isPassword: true,
-                          isObscured: _obscurePassword,
-                          controller: _passwordController,
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Password wajib diisi';
-                            }
-                            return null;
-                          },
-                          onToggle: () {
-                            setState(() {
-                              _obscurePassword = !_obscurePassword;
-                            });
-                          },
-                        ),
-                        const SizedBox(height: 15),
-                        _buildInputField(
-                          label: 'Konfirmasi Password',
-                          icon: Icons.lock_clock_outlined,
-                          hint: '••••••••',
-                          isPassword: true,
-                          isObscured: _obscureConfirmPassword,
-                          controller: _passwordConfirmationController,
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Konfirmasi password wajib diisi';
-                            }
-                            if (value != _passwordController.text) {
-                              return 'Password tidak sama';
-                            }
-                            return null;
-                          },
-                          onToggle: () {
-                            setState(() {
-                              _obscureConfirmPassword =
-                                  !_obscureConfirmPassword;
-                            });
-                          },
-                        ),
-                        const SizedBox(height: 15),
-                        Row(
-                          children: [
-                            Checkbox(
-                              value: _isAgree,
-                              onChanged: isLoading
-                                  ? null
-                                  : (v) => setState(() => _isAgree = v!),
-                              activeColor: const Color(0xFF006947),
-                            ),
-                            const Expanded(
-                              child: Text(
-                                'I agree to the Terms of Service and Privacy Policy',
-                                style: TextStyle(fontSize: 11),
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 30),
-                        SizedBox(
-                          width: double.infinity,
-                          height: 55,
-                          child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: const Color(0xFF006947),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(15),
-                              ),
-                            ),
-                            onPressed:
-                                _isAgree && !isLoading ? _submit : null,
-                            child: Text(
-                              isLoading ? 'Loading...' : 'BUAT AKUN →',
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 15),
-                        TextButton(
-                          onPressed:
-                              isLoading ? null : () => Navigator.pop(context),
-                          child: const Text(
-                            'Sudah punya akun? Log in',
-                            style: TextStyle(color: Color(0xFF006947)),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),
@@ -241,8 +250,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     );
   }
 
-  Widget _buildInputField(
-    {
+  Widget _buildInputField({
     required String label,
     required IconData icon,
     required String hint,
@@ -265,8 +273,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
             prefixIcon: Icon(icon, color: const Color(0xFF006947)),
             suffixIcon: isPassword
                 ? IconButton(
-                    icon: Icon(
-                        isObscured ? Icons.visibility_off : Icons.visibility),
+                    icon: Icon(isObscured ? Icons.visibility_off : Icons.visibility),
                     onPressed: onToggle,
                     color: Colors.grey,
                   )
