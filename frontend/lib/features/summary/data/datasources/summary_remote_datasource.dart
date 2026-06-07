@@ -133,6 +133,17 @@ class SummaryRemoteDataSourceImpl implements SummaryRemoteDataSource {
     final data = error.response?.data;
     if (data is Map<String, dynamic>) {
       final message = data['message'];
+      final detail = data['error'];
+
+      // DIAGNOSTIK SEMENTARA: tampilkan error teknis asli dari server
+      // agar penyebab "Proses Rangkuman Gagal" terlihat. Hapus setelah selesai debug.
+      if (detail is String && detail.isNotEmpty && detail != message) {
+        if (message is String && message.isNotEmpty) {
+          return '$message\n\n[debug] $detail';
+        }
+        return detail;
+      }
+
       if (message is String && message.isNotEmpty) return message;
 
       final errors = data['errors'];
