@@ -96,10 +96,14 @@ class SummaryService
         // Batasi token agar tidak terkena Context Window Limit (Max 20.000 Karakter)
         $cleanText = mb_strimwidth($text, 0, 12000, "...");
 
-        $apiKey = env('GROQ_API_KEY');
+        $apiKey = config('services.groq.key');
         $url = "https://api.groq.com/openai/v1/chat/completions";
 
         if (!$text) return "Teks kosong, tidak ada konten untuk dirangkum.";
+
+        if (empty($apiKey)) {
+            throw new \Exception("Groq API Error: GROQ_API_KEY belum dikonfigurasi di server.");
+        }
 
         // Jika Controller mengirimkan $optimizedPrompt, kita gunakan prompt tersebut sebagai instruksi sistem.
         // Jika tidak, gunakan instruksi default (fallback).
@@ -120,21 +124,25 @@ class SummaryService
                             "content" => "Materi yang harus diproses:\n" . $cleanText
                         ]
                     ],
-                    "temperature" => 0.3 // Diturunkan ke 0.3 agar AI lebih disiplin mengikuti format Markdown & JSON
+                    "temperature" => 0.3,
                 ]);
 
             if ($response->successful()) {
-                return $response->json()['choices'][0]['message']['content'];
+                $json = $response->json();
+                $content = $json['choices'][0]['message']['content'] ?? null;
+
+                if (!$content) {
+                    throw new \Exception("Groq API Error: unexpected response structure - " . $response->body());
+                }
+
+                return $content;
             }
 
             Log::error("Groq API Error: " . $response->body());
-            
-            // Lemparkan exception asli agar ditangkap oleh Exception Handler di Controller kamu
             throw new \Exception("Groq API Error: " . $response->body());
 
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             Log::error("Groq Exception: " . $e->getMessage());
-            // Lemparkan ke controller agar proses database di-rollback
             throw new \Exception($e->getMessage());
         }
     }
